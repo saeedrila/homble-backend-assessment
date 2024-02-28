@@ -13,6 +13,7 @@ class ProductAdmin(admin.ModelAdmin):
         ("name", "price"),
         ("category", "is_refrigerated"),
         "description",
+        "ingredients",
         ("id", "created_at"),
         "managed_by",
     )

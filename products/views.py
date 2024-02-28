@@ -16,6 +16,12 @@ def products_list(request):
     List of all products.
     """
 
-    products = Product.objects.all()
+    refregerated_param = request.query_params.get('refregerated', None)
+
+    if refregerated_param is not None:
+        refegerated = refregerated_param.lower() == 'true'
+        products = Product.objects.filter(is_refrigerated=refegerated)
+    else:
+        products = Product.objects.all()
     serializer = ProductListSerializer(products, many=True)
     return Response({"products": serializer.data}, status=HTTP_200_OK)
