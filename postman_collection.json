@@ -1,25 +1,326 @@
 {
 	"info": {
-		"_postman_id": "3dc3793d-b9a6-443a-9e25-37c5c539dad5",
+		"_postman_id": "428936ed-349a-42e8-8ffe-00a5d961a223",
 		"name": "Homble Backend Assessment",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "16443486",
-		"_collection_link": "https://myjaxy.postman.co/workspace/b0868cdd-6095-4277-af34-8e4538a7f871/collection/16443486-3dc3793d-b9a6-443a-9e25-37c5c539dad5?action=share&source=collection_link&creator=16443486"
+		"_exporter_id": "27725606"
 	},
 	"item": [
 		{
 			"name": "Products list",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"",
+							"pm.test(\"Response status code is 200\", function () {",
+							"    pm.expect(pm.response.code).to.equal(200);",
+							"});",
+							"",
+							"",
+							"pm.test(\"Response has the required fields - name and price\", function () {",
+							"    const responseData = pm.response.json();",
+							"    ",
+							"    pm.expect(responseData).to.be.an('object');",
+							"    pm.expect(responseData.products).to.be.an('array').and.to.have.lengthOf.at.least(1);",
+							"    ",
+							"    responseData.products.forEach(function(product) {",
+							"        pm.expect(product).to.have.property('name');",
+							"        pm.expect(product).to.have.property('price');",
+							"    });",
+							"});",
+							"",
+							"",
+							"pm.test(\"Name is a non-empty string\", function () {",
+							"  const responseData = pm.response.json();",
+							"  ",
+							"  pm.expect(responseData).to.be.an('object');",
+							"  responseData.products.forEach(function(product) {",
+							"    pm.expect(product.name).to.be.a('string').and.to.have.lengthOf.at.least(1, \"Name should not be empty\");",
+							"  });",
+							"});",
+							"",
+							"",
+							"pm.test(\"Price is a non-negative number\", function () {",
+							"    const responseData = pm.response.json();",
+							"",
+							"    pm.expect(responseData.products).to.be.an('array');",
+							"    responseData.products.forEach(function(product) {",
+							"        pm.expect(product.price).to.be.a('number').and.to.be.at.least(0);",
+							"    });",
+							"});",
+							"",
+							"",
+							"pm.test(\"Content-Type header is application/json\", function () {",
+							"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");",
+							"});",
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
 			"request": {
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "localhost:8000/products/",
+					"raw": "{{base_url}}/products/",
 					"host": [
-						"localhost"
+						"{{base_url}}"
 					],
-					"port": "8000",
 					"path": [
 						"products",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Products list with refregeration query true",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"",
+							"pm.test(\"Response status code is 200\", function () {",
+							"  pm.expect(pm.response.code).to.equal(200);",
+							"});",
+							"",
+							"",
+							"pm.test(\"Response has the required fields - name and price\", function () {",
+							"    const responseData = pm.response.json();",
+							"    ",
+							"    pm.expect(responseData).to.be.an('object');",
+							"    pm.expect(responseData.products).to.be.an('array').and.to.have.lengthOf.at.least(1);",
+							"    ",
+							"    responseData.products.forEach(function(product) {",
+							"        pm.expect(product.name).to.exist.and.to.be.a('string');",
+							"        pm.expect(product.price).to.exist.and.to.be.a('number');",
+							"    });",
+							"});",
+							"",
+							"",
+							"pm.test(\"Name is a non-empty string\", function () {",
+							"  const responseData = pm.response.json();",
+							"",
+							"  pm.expect(responseData).to.be.an('object');",
+							"  pm.expect(responseData.products).to.be.an('array');",
+							"  ",
+							"  responseData.products.forEach((product) => {",
+							"    pm.expect(product.name).to.be.a('string').and.to.have.lengthOf.at.least(1, \"Name should not be empty\");",
+							"  });",
+							"});",
+							"",
+							"",
+							"pm.test(\"Price is a non-negative number\", function () {",
+							"    const responseData = pm.response.json();",
+							"",
+							"    pm.expect(responseData).to.be.an('object');",
+							"    pm.expect(responseData.products).to.be.an('array');",
+							"    ",
+							"    responseData.products.forEach(function(product) {",
+							"        pm.expect(product.price).to.be.a('number');",
+							"        pm.expect(product.price).to.be.at.least(0);",
+							"    });",
+							"});",
+							"",
+							"",
+							"pm.test(\"Content-Type header is application/json\", function () {",
+							"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");",
+							"});",
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/products/?refregerated=true",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"products",
+						""
+					],
+					"query": [
+						{
+							"key": "refregerated",
+							"value": "true"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Products list with refregeration query false",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"",
+							"pm.test(\"Response status code is 200\", function () {",
+							"  pm.response.to.have.status(200);",
+							"});",
+							"",
+							"",
+							"pm.test(\"Response has the required fields - name and price\", function () {",
+							"    const responseData = pm.response.json();",
+							"    ",
+							"    pm.expect(responseData).to.be.an('object');",
+							"    pm.expect(responseData.products).to.be.an('array');",
+							"    ",
+							"    responseData.products.forEach(function(product) {",
+							"        pm.expect(product).to.have.property('name');",
+							"        pm.expect(product).to.have.property('price');",
+							"    });",
+							"});",
+							"",
+							"",
+							"pm.test(\"Name is a non-empty string\", function () {",
+							"  const responseData = pm.response.json();",
+							"  ",
+							"  pm.expect(responseData).to.be.an('object');",
+							"  pm.expect(responseData.products).to.be.an('array');",
+							"  responseData.products.forEach(function(product) {",
+							"    pm.expect(product.name).to.be.a('string').and.to.have.lengthOf.at.least(1, \"Name should not be empty\");",
+							"  });",
+							"});",
+							"",
+							"",
+							"pm.test(\"Price is a non-negative integer\", function () {",
+							"  const responseData = pm.response.json();",
+							"  ",
+							"  pm.expect(responseData).to.be.an('object');",
+							"  pm.expect(responseData.products).to.be.an('array');",
+							"",
+							"  responseData.products.forEach(function(product) {",
+							"    pm.expect(product.price).to.be.a('number').and.to.be.at.least(0, \"Price should be a non-negative integer\");",
+							"  });",
+							"});",
+							"",
+							"",
+							"pm.test(\"Content-Type header is application/json\", function () {",
+							"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");",
+							"});",
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/products/?refregerated=false",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"products",
+						""
+					],
+					"query": [
+						{
+							"key": "refregerated",
+							"value": "false"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Login",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "X-CSRFToken",
+						"value": "{{CSRF_TOKEN}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"username\": \"saeed\",\n    \"password\": \"asdf\"\n}\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}/admin/login/?next=/admin/",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"admin",
+						"login",
+						""
+					],
+					"query": [
+						{
+							"key": "next",
+							"value": "/admin/"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Categories list",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"",
+							"pm.test(\"Response status code is 200\", function () {",
+							"  pm.response.to.have.status(200);",
+							"});",
+							"",
+							"",
+							"pm.test(\"Response Content-Type header is set to application/json\", function () {",
+							"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");",
+							"});",
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Token {{token}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{base_url}}/categories/",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"categories",
 						""
 					]
 				}

@@ -13,7 +13,8 @@ from .serializers import ProductListSerializer
 @permission_classes([AllowAny])
 def products_list(request):
     """
-    List of all products.
+    List of all products. The request can have a query paramerter 'refregerated = True'
+    or false. This will return the product list that adhere to the criteria.
     """
 
     refregerated_param = request.query_params.get('refregerated', None)
