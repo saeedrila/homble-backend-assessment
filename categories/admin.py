@@ -11,7 +11,5 @@ class CategoryAdmin(admin.ModelAdmin):
     search_fields = ("name",)
     list_filter = ("is_active",)
     fields = ("id", "name", "is_active", "count_products")
-    # autocomplete_fields = ()
     readonly_fields = ("id", "count_products")
     inlines = (ProductInline,)
-    

@@ -17,10 +17,10 @@ def products_list(request):
     or false. This will return the product list that adhere to the criteria.
     """
 
-    refregerated_param = request.query_params.get('refregerated', None)
+    refregerated_param = request.query_params.get("refregerated", None)
 
     if refregerated_param is not None:
-        refegerated = refregerated_param.lower() == 'true'
+        refegerated = refregerated_param.lower() == "true"
         products = Product.objects.filter(is_refrigerated=refegerated)
     else:
         products = Product.objects.all()
