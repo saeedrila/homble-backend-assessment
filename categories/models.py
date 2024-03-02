@@ -4,7 +4,8 @@ from django.utils.translation import gettext_lazy as _
 
 class Category(models.Model):
     """
-    Very basic structure. To be further built up.
+    Category model. Count_product property added to count products that are
+    related to a particular category.
     """
 
     name = models.CharField(max_length=30)

@@ -5,7 +5,7 @@ from django.utils.translation import gettext_lazy as _
 
 class Product(models.Model):
     """
-    Very basic structure. To be further built up.
+    Products model consists of product name, description, category, etc.
     """
 
     name = models.CharField(
@@ -63,6 +63,12 @@ class Product(models.Model):
 
 
 class Sku(models.Model):
+    """
+    SKU (Stock Keeping Unit) consists of product model, size, and price details.
+    Admin adds platform commission and cost_price details.
+    Selling price will be calculated and automatically saved.
+    """
+
     product = models.ForeignKey(
         Product,
         related_name="sku",
@@ -72,10 +78,22 @@ class Sku(models.Model):
         _("Size (in grams)"),
         help_text=_("Size of SKU in grams"),
     )
-    price = models.PositiveSmallIntegerField(
+    selling_price = models.PositiveSmallIntegerField(
         _("Selling price (Rs.)"),
         help_text=_("Price payable by customer (Rs.)"),
     )
+    platform_commission = models.PositiveSmallIntegerField(
+        _("Platform commission (Rs.)"),
+        help_text=_("Commission for platform (Rs.)"),
+    )
+    cost_price = models.PositiveSmallIntegerField(
+        _("Cost price (Rs.)"),
+        help_text=_("Cost price (Rs.)"),
+    )
+
+    def save(self, *args, **kwargs):
+        self.selling_price = self.cost_price + self.platform_commission
+        super().save(*args, **kwargs)
 
     def __str__(self):
-        return f"{self.product.name}: {self.size}gm (Rs.{self.price})"
+        return f"{self.product.name}: {self.size}gm (Rs.{self.selling_price})"

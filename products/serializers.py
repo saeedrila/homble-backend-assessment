@@ -5,7 +5,7 @@ from products.models import Product
 
 class ProductListSerializer(serializers.ModelSerializer):
     """
-    To show list of products.
+    Serializer to show list of products.
     """
 
     class Meta:

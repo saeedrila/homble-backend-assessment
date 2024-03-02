@@ -6,6 +6,10 @@ from products.admin import ProductInline
 
 @admin.register(Category)
 class CategoryAdmin(admin.ModelAdmin):
+    """
+    Admin page for category management.
+    """
+
     list_display = ("id", "name", "is_active", "count_products")
     ordering = ("id",)
     search_fields = ("name",)

@@ -3,8 +3,23 @@ from django.contrib import admin
 from products.models import Product, Sku
 
 
+class SkuInline(admin.TabularInline):
+    """
+    For displaying in ProductAdmin page.
+    """
+
+    model = Sku
+    extra = 1
+    ordering = ("-id",)
+    readonly_fields = ("selling_price",)
+
+
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
+    """
+    Product admin page configuration.
+    """
+
     list_display = ("name", "managed_by")
     ordering = ("-id",)
     search_fields = ("name",)
@@ -19,11 +34,12 @@ class ProductAdmin(admin.ModelAdmin):
     )
     autocomplete_fields = ("category", "managed_by")
     readonly_fields = ("id", "created_at")
+    inlines = (SkuInline,)
 
 
 class ProductInline(admin.StackedInline):
     """
-    For display in CategoryAdmin
+    For displaying in CategoryAdmin.
     """
 
     model = Product
@@ -34,12 +50,18 @@ class ProductInline(admin.StackedInline):
     show_change_link = True
 
 
-class SkuInline(admin.TabularInline):
-    model = Sku
-    extra = 1
-
-
 @admin.register(Sku)
 class SkuAdmin(admin.ModelAdmin):
-    list_display = ("product", "size", "price")
+    """
+    SKU admin page configuration.
+    """
+
+    list_display = (
+        "product",
+        "size",
+        "cost_price",
+        "platform_commission",
+        "selling_price",
+    )
+    readonly_fields = ("selling_price",)
     search_fields = ("product__name", "size")
