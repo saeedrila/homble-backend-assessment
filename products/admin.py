@@ -60,8 +60,18 @@ class SkuAdmin(admin.ModelAdmin):
         "product",
         "size",
         "cost_price",
+        "status",
         "platform_commission",
         "selling_price",
+        "get_markup_percentage_display",
     )
-    readonly_fields = ("selling_price",)
+    readonly_fields = ("selling_price", "get_markup_percentage_display")
     search_fields = ("product__name", "size")
+
+    def get_markup_percentage_display(self, obj):
+        if obj.cost_price == 0:
+            return 0
+        markup_percentage = (obj.platform_commission / obj.cost_price) * 100
+        return f"{markup_percentage:.2f}%"
+
+    get_markup_percentage_display.short_description = "Markup Percentage"

@@ -1,6 +1,7 @@
 from django.conf import settings
 from django.db import models
 from django.utils.translation import gettext_lazy as _
+from django.core.validators import MaxValueValidator
 
 
 class Product(models.Model):
@@ -69,14 +70,39 @@ class Sku(models.Model):
     Selling price will be calculated and automatically saved.
     """
 
+    class Status(models.IntegerChoices):
+        PENDING = 0, _("Pending for approval")
+        APPROVED = 1, _("Approved")
+        DISCONTINUED = 2, _("Discontinued")
+
+    MEASUREMENT_UNIT_CHOICES = [
+        ("gm", "Grams"),
+        ("kg", "Kilograms"),
+        ("mL", "Milliliters"),
+        ("L", "Liters"),
+        ("pc", "Piece"),
+    ]
+
     product = models.ForeignKey(
         Product,
         related_name="sku",
         on_delete=models.CASCADE,
     )
     size = models.PositiveSmallIntegerField(
-        _("Size (in grams)"),
-        help_text=_("Size of SKU in grams"),
+        _("Size (in defined unit)"),
+        help_text=_("Size of SKU in defined unit"),
+        validators=[MaxValueValidator(999)],
+    )
+    measurement_unit = models.CharField(
+        _("Measurement Unit"),
+        max_length=2,
+        choices=MEASUREMENT_UNIT_CHOICES,
+        default="gm",
+    )
+    status = models.IntegerField(
+        _("Status"),
+        choices=Status.choices,
+        default=Status.PENDING,
     )
     selling_price = models.PositiveSmallIntegerField(
         _("Selling price (Rs.)"),
@@ -92,7 +118,8 @@ class Sku(models.Model):
     )
 
     def save(self, *args, **kwargs):
-        self.selling_price = self.cost_price + self.platform_commission
+        if self.cost_price is not None and self.platform_commission is not None:
+            self.selling_price = self.cost_price + self.platform_commission
         super().save(*args, **kwargs)
 
     def __str__(self):
