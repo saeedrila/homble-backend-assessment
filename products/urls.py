@@ -6,6 +6,7 @@ from .views import (
     delete_sku,
     product_detail_with_sku,
     update_sku_status,
+    queryset_skus,
 )
 
 
@@ -15,4 +16,6 @@ urlpatterns = [
     path("create-sku/", create_sku, name="create-sku"),
     path("update-sku-status/", update_sku_status, name="update-sku-status"),
     path("delete-sku/", delete_sku, name="delete-sku"),
+    # Querysets
+    path("queryset-skus/", queryset_skus, name="queryset-skus"),
 ]

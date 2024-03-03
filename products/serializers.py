@@ -31,19 +31,6 @@ class SkuSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
-# Check
-class ProductDetailSerializer(serializers.Serializer):
-    """
-    Used for serializing product details corresponding to product_id.
-    """
-
-    sku = SkuSerializer(many=True, read_only=True)
-
-    class Meta:
-        model = Product
-        fields = "__all__"
-
-
 class ProductDetailsWithSkuSerializer(serializers.Serializer):
     """
     Used for serializing product along with its SKUs.

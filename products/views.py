@@ -6,7 +6,6 @@ from .models import Product, Sku
 from .serializers import (
     ProductListSerializer,
     SkuSerializer,
-    ProductDetailSerializer,
     ProductDetailsWithSkuSerializer,
 )
 
@@ -91,23 +90,6 @@ def delete_sku(request):
     )
 
 
-# Check.
-@api_view(["GET"])
-def product_detail(request, product_id):
-    """
-    Returns product details corresponding to product_id.
-    """
-    try:
-        product = Product.objects.get(pk=product_id)
-    except Product.DoesNotExist:
-        return Response(
-            {"Details": "Product not found"}, status=status.HTTP_404_NOT_FOUND
-        )
-
-    serializer = ProductDetailSerializer(product)
-    return Response(serializer.data, status=status.HTTP_200_OK)
-
-
 @api_view(["GET"])
 @permission_classes([IsAdminUser])
 def product_detail_with_sku(request):
@@ -124,3 +106,15 @@ def product_detail_with_sku(request):
 
     serializer = ProductDetailsWithSkuSerializer(product)
     return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+@api_view(["GET"])
+@permission_classes([AllowAny])
+def queryset_skus(request):
+    """
+    SKUs along with their category name.
+    """
+    my_queryset = Sku.objects.select_related("product__category")
+    for sku in my_queryset:
+        print(f"SKU: {sku}; (SKU ID:{sku.id}); Category: {sku.product.category}")
+    return Response(status=status.HTTP_200_OK)
